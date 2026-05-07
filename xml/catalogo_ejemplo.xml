@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalogo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="catalogo.xsd">
+
+    <info>
+        <propietario>David Lopez</propietario>
+        <fechaExportacion>2026-05-07</fechaExportacion>
+        <totalLibros>3</totalLibros>
+    </info>
+
+    <libros>
+        <libro id="1">
+            <titulo>Cien anios de soledad</titulo>
+            <isbn>978-8497592208</isbn>
+            <autor>Gabriel Garcia Marquez</autor>
+            <categoria>Novela</categoria>
+            <editorial>Catedra</editorial>
+            <anioPublicacion>1967</anioPublicacion>
+            <numPaginas>471</numPaginas>
+            <disponible>true</disponible>
+        </libro>
+        <libro id="4">
+            <titulo>Don Quijote de la Mancha</titulo>
+            <isbn>978-8424116378</isbn>
+            <autor>Miguel de Cervantes</autor>
+            <categoria>Clasico</categoria>
+            <editorial>Espasa</editorial>
+            <anioPublicacion>1605</anioPublicacion>
+            <numPaginas>1376</numPaginas>
+            <disponible>true</disponible>
+        </libro>
+        <libro id="7">
+            <titulo>1984</titulo>
+            <isbn>978-8499890944</isbn>
+            <autor>George Orwell</autor>
+            <categoria>Ciencia Ficcion</categoria>
+            <editorial>Debolsillo</editorial>
+            <anioPublicacion>1949</anioPublicacion>
+            <numPaginas>352</numPaginas>
+            <disponible>true</disponible>
+        </libro>
+    </libros>
+
+</catalogo>

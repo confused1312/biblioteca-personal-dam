@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
+
+    <xs:element name="catalogo">
+        <xs:complexType>
+            <xs:sequence>
+                <xs:element name="info" type="infoType"/>
+                <xs:element name="libros">
+                    <xs:complexType>
+                        <xs:sequence>
+                            <xs:element name="libro" type="libroType" minOccurs="0" maxOccurs="unbounded"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
+            </xs:sequence>
+        </xs:complexType>
+    </xs:element>
+
+    <xs:complexType name="infoType">
+        <xs:sequence>
+            <xs:element name="propietario" type="xs:string"/>
+            <xs:element name="fechaExportacion" type="xs:date"/>
+            <xs:element name="totalLibros" type="xs:nonNegativeInteger"/>
+        </xs:sequence>
+    </xs:complexType>
+
+    <xs:complexType name="libroType">
+        <xs:sequence>
+            <xs:element name="titulo" type="tituloType"/>
+            <xs:element name="isbn" type="isbnType"/>
+            <xs:element name="autor" type="xs:string"/>
+            <xs:element name="categoria" type="xs:string"/>
+            <xs:element name="editorial" type="xs:string" minOccurs="0"/>
+            <xs:element name="anioPublicacion" type="anioType" minOccurs="0"/>
+            <xs:element name="numPaginas" type="xs:positiveInteger" minOccurs="0"/>
+            <xs:element name="disponible" type="xs:boolean"/>
+        </xs:sequence>
+        <xs:attribute name="id" type="xs:positiveInteger" use="required"/>
+    </xs:complexType>
+
+    <xs:simpleType name="tituloType">
+        <xs:restriction base="xs:string">
+            <xs:minLength value="1"/>
+            <xs:maxLength value="150"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="isbnType">
+        <xs:restriction base="xs:string">
+            <xs:pattern value="[0-9\-]{10,20}"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+    <xs:simpleType name="anioType">
+        <xs:restriction base="xs:integer">
+            <xs:minInclusive value="1000"/>
+            <xs:maxInclusive value="2100"/>
+        </xs:restriction>
+    </xs:simpleType>
+
+</xs:schema>

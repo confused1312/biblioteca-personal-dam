@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalogo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="catalogo.xsd">
+
+    <info>
+        <propietario>David</propietario>
+        <fechaExportacion>2026-05-07</fechaExportacion>
+        <totalLibros>15</totalLibros>
+    </info>
+
+    <libros>
+        <libro id="1">
+            <titulo>Cien años de soledad</titulo>
+            <isbn>978-8497592208</isbn>
+            <autor>Gabriel García Márquez</autor>
+            <categoria>Novela</categoria>
+            <editorial>Cátedra</editorial>
+            <anioPublicacion>1967</anioPublicacion>
+            <numPaginas>471</numPaginas>
+            <disponible>true</disponible>
+        </libro>
+        <libro id="2">
+            <titulo>El amor en los tiempos del cólera</titulo>
+            <isbn>978-8439728375</isbn>
+            <autor>Gabriel García Márquez</autor>
+            <categoria>Novela</categoria>
+            <editorial>Debolsillo</editorial>
+            <anioPublicacion>1985</anioPublicacion>
+            <numPaginas>496</numPaginas>
+            <disponible>false</disponible>
+        </libro>
+        <libro id="3">
+            <titulo>La casa de los espíritus</titulo>
+            <isbn>978-8401242502</isbn>
+            <autor>Isabel Allende</autor>
+            <categoria>Novela</categoria>
+            <editorial>Plaza &amp; Janés</editorial>
+            <anioPublicacion>1982</anioPublicacion>
+            <numPaginas>480</numPaginas>
+            <disponible>true</disponible>
+        </libro>
+        <libro id="4">
+            <titulo>Don Quijote de la Mancha</titulo>
+            <isbn>978-8424116378</isbn>
+            <autor>Miguel de Cervantes</autor>
+            <categoria>Clásico</categoria>
+            <editorial>Espasa</editorial>
+            <anioPublicacion>1605</anioPublicacion>
+            <numPaginas>1376</numPaginas>
+            <disponible>true</disponible>
+        </libro>
+        <libro id="5">
+            <titulo>Ficciones</titulo>
+            <isbn>978-8420633138</isbn>
+            <autor>Jorge Luis Borges</autor>
+            <categoria>Clásico</categoria>
+            <editorial>Alianza Editorial</editorial>
+            <anioPublicacion>1944</anioPublicacion>
+            <numPaginas>224</numPaginas>
+            <disponible>true</disponible>
+        </libro>
+        <libro id="6">
+            <titulo>La ciudad y los perros</titulo>
+            <isbn>978-8420471839</isbn>
+            <autor>Mario Vargas Llosa</autor>
+            <categoria>Novela</categoria>
+            <editorial>Alfaguara</editorial>
+            <anioPublicacion>1963</anioPublicacion>
+            <numPaginas>432</numPaginas>
+            <disponible>false</disponible>
+        </libro>
+        <libro id="7">
+            <titulo>1984</titulo>
+            <isbn>978-8499890944</isbn>
+            <autor>George Orwell</autor>
+            <categoria>Ciencia Ficción</categoria>
+            <editorial>Debolsillo</editorial>
+            <anioPublicacion>1949</anioPublicacion>
+            <numPaginas>352</numPaginas>
+            <disponible>true</disponible>
+        </libro>
+        <libro id="8">
+            <titulo>Rebelión en la granja</titulo>
+            <isbn>978-8499890951</isbn>
+            <autor>George Orwell</autor>
+            <categoria>Novela</categoria>
+            <editorial>Debolsillo</editorial>
+            <anioPublicacion>1945</anioPublicacion>
+            <numPaginas>152</numPaginas>
+            <disponible>true</disponible>
+        </libro>
+        <libro id="9">
+            <titulo>El señor de los anillos</titulo>
+            <isbn>978-8445000663</isbn>
+            <autor>J.R.R. Tolkien</autor>
+            <categoria>Fantasía</categoria>
+            <editorial>Minotauro</editorial>
+            <anioPublicacion>1954</anioPublicacion>
+            <numPaginas>1392</numPaginas>
+            <disponible>false</disponible>
+        </libro>
+        <libro id="10">
+            <titulo>El hobbit</titulo>
+            <isbn>978-8445000694</isbn>
+            <autor>J.R.R. Tolkien</autor>
+            <categoria>Fantasía</categoria>
+            <editorial>Minotauro</editorial>
+            <anioPublicacion>1937</anioPublicacion>
+            <numPaginas>320</numPaginas>
+            <disponible>true</disponible>
+        </libro>
+        <libro id="11">
+            <titulo>It</titulo>
+            <isbn>978-8401021800</isbn>
+            <autor>Stephen King</autor>
+            <categoria>Terror</categoria>
+            <editorial>Debolsillo</editorial>
+            <anioPublicacion>1986</anioPublicacion>
+            <numPaginas>1504</numPaginas>
+            <disponible>true</disponible>
+        </libro>
+        <libro id="12">
+            <titulo>El resplandor</titulo>
+            <isbn>978-8497594257</isbn>
+            <autor>Stephen King</autor>
+            <categoria>Terror</categoria>
+            <editorial>Debolsillo</editorial>
+            <anioPublicacion>1977</anioPublicacion>
+            <numPaginas>656</numPaginas>
+            <disponible>true</disponible>
+        </libro>
+        <libro id="13">
+            <titulo>Diez negritos</titulo>
+            <isbn>978-8467033908</isbn>
+            <autor>Agatha Christie</autor>
+            <categoria>Misterio</categoria>
+            <editorial>Booket</editorial>
+            <anioPublicacion>1939</anioPublicacion>
+            <numPaginas>256</numPaginas>
+            <disponible>false</disponible>
+        </libro>
+        <libro id="14">
+            <titulo>Asesinato en el Orient Express</titulo>
+            <isbn>978-8467034035</isbn>
+            <autor>Agatha Christie</autor>
+            <categoria>Misterio</categoria>
+            <editorial>Booket</editorial>
+            <anioPublicacion>1934</anioPublicacion>
+            <numPaginas>288</numPaginas>
+            <disponible>true</disponible>
+        </libro>
+        <libro id="15">
+            <titulo>Tokio blues</titulo>
+            <isbn>978-8483462959</isbn>
+            <autor>Haruki Murakami</autor>
+            <categoria>Novela</categoria>
+            <editorial>Tusquets</editorial>
+            <anioPublicacion>1987</anioPublicacion>
+            <numPaginas>384</numPaginas>
+            <disponible>true</disponible>
+        </libro>
+    </libros>
+</catalogo>

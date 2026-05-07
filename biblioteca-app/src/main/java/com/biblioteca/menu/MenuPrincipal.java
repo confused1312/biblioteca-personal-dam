@@ -2,6 +2,8 @@ package com.biblioteca.menu;
 
 import com.biblioteca.dao.*;
 import com.biblioteca.model.*;
+import com.biblioteca.util.ExportadorXML;
+import com.biblioteca.util.ValidadorXML;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -30,6 +32,7 @@ public class MenuPrincipal {
                 case 3 -> menuCategorias();
                 case 4 -> menuAmigos();
                 case 5 -> menuPrestamos();
+                case 6 -> exportarCatalogo();
                 case 0 -> {
                     System.out.println("Hasta luego.");
                     salir = true;
@@ -47,7 +50,29 @@ public class MenuPrincipal {
         System.out.println("3. Categorias");
         System.out.println("4. Amigos");
         System.out.println("5. Prestamos");
+        System.out.println("6. Exportar catalogo a XML");
         System.out.println("0. Salir");
+    }
+
+    private void exportarCatalogo() {
+        String propietario = leerTexto("Tu nombre: ");
+        String rutaXml = "C:\\proyectos\\biblioteca-personal-dam\\xml\\catalogo.xml";
+        String rutaXsd = "C:\\proyectos\\biblioteca-personal-dam\\xml\\catalogo.xsd";
+
+        ExportadorXML exp = new ExportadorXML();
+        boolean exportado = exp.exportarCatalogo(rutaXml, propietario);
+        if (!exportado) {
+            System.out.println("Error en la exportacion.");
+            return;
+        }
+        System.out.println("Catalogo exportado a: " + rutaXml);
+
+        ValidadorXML val = new ValidadorXML();
+        if (val.validar(rutaXml, rutaXsd)) {
+            System.out.println("XML validado correctamente contra el XSD.");
+        } else {
+            System.out.println("El XML generado NO pasa la validacion del XSD.");
+        }
     }
 
     private void menuLibros() {
