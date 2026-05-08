@@ -7,6 +7,7 @@ Esta carpeta contiene el modulo de exportacion de la biblioteca a formato XML, j
 - **catalogo.xsd**: esquema XML que define la estructura, tipos de datos y restricciones validas para los catalogos exportados.
 - **catalogo_ejemplo.xml**: archivo XML de muestra con varios libros, validado correctamente contra el XSD.
 - **catalogo.xml**: archivo generado dinamicamente por la aplicacion al exportar la coleccion.
+- **catalogo_invalido.xml**: archivo XML que rompe a proposito multiples reglas del XSD para demostrar que la validacion funciona correctamente.
 
 ## Estructura del XSD
 
@@ -33,6 +34,19 @@ La opcion 6 del menu principal (`Exportar catalogo a XML`) realiza dos pasos:
 2. Valida el archivo generado contra `catalogo.xsd` usando la API estandar de Java (`javax.xml.validation`).
 
 El resultado de la validacion se muestra en consola.
+
+## Demostracion del control de errores del XSD
+
+El archivo `catalogo_invalido.xml` se ha creado deliberadamente con multiples errores para demostrar que el XSD valida realmente y no es decorativo. Los errores incluidos son:
+
+1. **Titulo vacio**: viola la restriccion `minLength=1` de `tituloType`.
+2. **ISBN con letras**: viola el patron `[0-9\-]{10,20}` de `isbnType`.
+3. **Anio fuera de rango**: el valor `3500` viola `maxInclusive=2100` de `anioType`.
+4. **Paginas negativas**: el valor `-50` viola el tipo `xs:positiveInteger`.
+5. **Atributo `id` ausente**: el segundo libro no incluye el atributo obligatorio.
+6. **Booleano invalido**: el valor `maybe` no es un `xs:boolean` valido.
+
+Al validar este archivo contra el XSD, el validador detecta y reporta los errores. Esto se puede comprobar abriendo el archivo en IntelliJ IDEA, que marca cada infraccion automaticamente.
 
 ## Validacion manual
 

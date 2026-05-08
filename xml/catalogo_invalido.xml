@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<catalogo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+          xsi:noNamespaceSchemaLocation="catalogo.xsd">
+
+    <info>
+        <propietario>David Lopez</propietario>
+        <fechaExportacion>2026-05-07</fechaExportacion>
+        <totalLibros>2</totalLibros>
+    </info>
+
+    <libros>
+        <libro id="1">
+            <titulo></titulo>
+            <isbn>ABCDEFGHIJ</isbn>
+            <autor>Autor de prueba</autor>
+            <categoria>Novela</categoria>
+            <editorial>Editorial X</editorial>
+            <anioPublicacion>3500</anioPublicacion>
+            <numPaginas>-50</numPaginas>
+            <disponible>true</disponible>
+        </libro>
+        <libro>
+            <titulo>Libro sin atributo id</titulo>
+            <isbn>978-1234567890</isbn>
+            <autor>Otro autor</autor>
+            <categoria>Ensayo</categoria>
+            <disponible>maybe</disponible>
+        </libro>
+    </libros>
+
+</catalogo>
