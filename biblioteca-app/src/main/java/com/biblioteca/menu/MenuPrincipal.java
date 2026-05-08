@@ -2,7 +2,10 @@ package com.biblioteca.menu;
 
 import com.biblioteca.dao.*;
 import com.biblioteca.model.*;
+import com.biblioteca.service.PrestamoService;
 import com.biblioteca.util.ExportadorXML;
+import com.biblioteca.util.ResultadoOperacion;
+import com.biblioteca.util.Validador;
 import com.biblioteca.util.ValidadorXML;
 
 import java.time.LocalDate;
@@ -19,6 +22,7 @@ public class MenuPrincipal {
     private final LibroDAO libroDAO = new LibroDAO();
     private final AmigoDAO amigoDAO = new AmigoDAO();
     private final PrestamoDAO prestamoDAO = new PrestamoDAO();
+    private final PrestamoService prestamoService = new PrestamoService();
     private final DateTimeFormatter df = DateTimeFormatter.ofPattern("yyyy-MM-dd");
 
     public void iniciar() {
@@ -55,13 +59,12 @@ public class MenuPrincipal {
     }
 
     private void exportarCatalogo() {
-        String propietario = leerTexto("Tu nombre: ");
+        String propietario = leerTextoValidado("Tu nombre: ", "El nombre no puede estar vacio.");
         String rutaXml = "C:\\proyectos\\biblioteca-personal-dam\\xml\\catalogo.xml";
         String rutaXsd = "C:\\proyectos\\biblioteca-personal-dam\\xml\\catalogo.xsd";
 
         ExportadorXML exp = new ExportadorXML();
-        boolean exportado = exp.exportarCatalogo(rutaXml, propietario);
-        if (!exportado) {
+        if (!exp.exportarCatalogo(rutaXml, propietario)) {
             System.out.println("Error en la exportacion.");
             return;
         }
@@ -92,7 +95,7 @@ public class MenuPrincipal {
                 case 1 -> imprimirLista(libroDAO.listarTodos());
                 case 2 -> imprimirLista(libroDAO.listarDisponibles());
                 case 3 -> {
-                    String t = leerTexto("Texto a buscar: ");
+                    String t = leerTextoValidado("Texto a buscar: ", "El texto no puede estar vacio.");
                     imprimirLista(libroDAO.buscarPorTitulo(t));
                 }
                 case 4 -> anadirLibro();
@@ -105,10 +108,10 @@ public class MenuPrincipal {
     }
 
     private void anadirLibro() {
-        String titulo = leerTexto("Titulo: ");
-        String isbn = leerTexto("ISBN: ");
-        Integer anio = leerEnteroOpcional("Anio publicacion (vacio para omitir): ");
-        Integer paginas = leerEnteroOpcional("Numero de paginas (vacio para omitir): ");
+        String titulo = leerTextoValidado("Titulo: ", "El titulo no puede estar vacio.");
+        String isbn = leerIsbnValidado("ISBN: ");
+        Integer anio = leerAnioOpcional("Anio publicacion (vacio para omitir): ");
+        Integer paginas = leerEnteroPositivoOpcional("Numero de paginas (vacio para omitir): ");
         String editorial = leerTexto("Editorial: ");
         int idAutor = leerEntero("ID del autor: ");
         int idCategoria = leerEntero("ID de la categoria: ");
@@ -172,10 +175,10 @@ public class MenuPrincipal {
     }
 
     private void anadirAutor() {
-        String nombre = leerTexto("Nombre: ");
-        String apellidos = leerTexto("Apellidos: ");
+        String nombre = leerTextoValidado("Nombre: ", "El nombre no puede estar vacio.");
+        String apellidos = leerTextoValidado("Apellidos: ", "Los apellidos no pueden estar vacios.");
         String nacionalidad = leerTexto("Nacionalidad: ");
-        Integer anio = leerEnteroOpcional("Anio nacimiento (vacio para omitir): ");
+        Integer anio = leerAnioOpcional("Anio nacimiento (vacio para omitir): ");
 
         Autor autor = new Autor(nombre, apellidos, nacionalidad, anio);
         if (autorDAO.insertar(autor)) {
@@ -229,7 +232,7 @@ public class MenuPrincipal {
     }
 
     private void anadirCategoria() {
-        String nombre = leerTexto("Nombre: ");
+        String nombre = leerTextoValidado("Nombre: ", "El nombre no puede estar vacio.");
         String descripcion = leerTexto("Descripcion: ");
         Categoria c = new Categoria(nombre, descripcion);
         if (categoriaDAO.insertar(c)) System.out.println("Categoria anadida con ID " + c.getIdCategoria());
@@ -279,10 +282,10 @@ public class MenuPrincipal {
     }
 
     private void anadirAmigo() {
-        String nombre = leerTexto("Nombre: ");
-        String apellidos = leerTexto("Apellidos: ");
-        String email = leerTexto("Email: ");
-        String telefono = leerTexto("Telefono: ");
+        String nombre = leerTextoValidado("Nombre: ", "El nombre no puede estar vacio.");
+        String apellidos = leerTextoValidado("Apellidos: ", "Los apellidos no pueden estar vacios.");
+        String email = leerEmailValidado("Email: ");
+        String telefono = leerTelefonoValidado("Telefono: ");
         Amigo a = new Amigo(nombre, apellidos, email, telefono);
         if (amigoDAO.insertar(a)) System.out.println("Amigo anadido con ID " + a.getIdAmigo());
         else System.out.println("No se pudo anadir.");
@@ -336,51 +339,18 @@ public class MenuPrincipal {
 
     private void prestarLibro() {
         int idLibro = leerEntero("ID del libro a prestar: ");
-        Libro libro = libroDAO.buscarPorId(idLibro);
-        if (libro == null) {
-            System.out.println("Libro no encontrado.");
-            return;
-        }
-        if (!libro.isDisponible()) {
-            System.out.println("Ese libro no esta disponible.");
-            return;
-        }
         int idAmigo = leerEntero("ID del amigo: ");
-        Amigo amigo = amigoDAO.buscarPorId(idAmigo);
-        if (amigo == null) {
-            System.out.println("Amigo no encontrado.");
-            return;
-        }
-        LocalDate fechaPrestamo = LocalDate.now();
         LocalDate fechaPrevista = leerFecha("Fecha devolucion prevista (yyyy-MM-dd): ");
         String notas = leerTexto("Notas (puede estar vacio): ");
 
-        Prestamo p = new Prestamo(idLibro, idAmigo, fechaPrestamo, fechaPrevista, null, notas);
-        if (prestamoDAO.insertar(p)) {
-            libroDAO.cambiarDisponibilidad(idLibro, false);
-            System.out.println("Prestamo registrado con ID " + p.getIdPrestamo());
-        } else {
-            System.out.println("No se pudo registrar el prestamo.");
-        }
+        ResultadoOperacion r = prestamoService.prestarLibro(idLibro, idAmigo, fechaPrevista, notas);
+        System.out.println(r.getMensaje());
     }
 
     private void devolverLibro() {
         int idPrestamo = leerEntero("ID del prestamo a devolver: ");
-        Prestamo p = prestamoDAO.buscarPorId(idPrestamo);
-        if (p == null) {
-            System.out.println("Prestamo no encontrado.");
-            return;
-        }
-        if (p.estaDevuelto()) {
-            System.out.println("Ese prestamo ya estaba devuelto.");
-            return;
-        }
-        if (prestamoDAO.registrarDevolucion(idPrestamo, LocalDate.now())) {
-            libroDAO.cambiarDisponibilidad(p.getIdLibro(), true);
-            System.out.println("Devolucion registrada.");
-        } else {
-            System.out.println("No se pudo registrar la devolucion.");
-        }
+        ResultadoOperacion r = prestamoService.devolverLibro(idPrestamo);
+        System.out.println(r.getMensaje());
     }
 
     private void imprimirLista(List<?> lista) {
@@ -416,9 +386,59 @@ public class MenuPrincipal {
         }
     }
 
+    private Integer leerEnteroPositivoOpcional(String mensaje) {
+        while (true) {
+            Integer n = leerEnteroOpcional(mensaje);
+            if (n == null) return null;
+            if (Validador.esEnteroPositivo(n)) return n;
+            System.out.println("Debe ser un numero positivo.");
+        }
+    }
+
+    private Integer leerAnioOpcional(String mensaje) {
+        while (true) {
+            Integer n = leerEnteroOpcional(mensaje);
+            if (n == null) return null;
+            if (Validador.esAnioValido(n)) return n;
+            System.out.println("Anio invalido. Debe estar entre 1000 y " + (LocalDate.now().getYear() + 1) + ".");
+        }
+    }
+
     private String leerTexto(String mensaje) {
         System.out.print(mensaje);
         return sc.nextLine();
+    }
+
+    private String leerTextoValidado(String mensaje, String mensajeError) {
+        while (true) {
+            String t = leerTexto(mensaje);
+            if (Validador.esTextoValido(t)) return t;
+            System.out.println(mensajeError);
+        }
+    }
+
+    private String leerIsbnValidado(String mensaje) {
+        while (true) {
+            String s = leerTexto(mensaje);
+            if (Validador.esIsbnValido(s)) return s;
+            System.out.println("ISBN invalido. Debe contener entre 10 y 20 caracteres (digitos y guiones).");
+        }
+    }
+
+    private String leerEmailValidado(String mensaje) {
+        while (true) {
+            String s = leerTexto(mensaje);
+            if (Validador.esEmailValido(s)) return s;
+            System.out.println("Email invalido. Formato esperado: nombre@dominio.com");
+        }
+    }
+
+    private String leerTelefonoValidado(String mensaje) {
+        while (true) {
+            String s = leerTexto(mensaje);
+            if (Validador.esTelefonoValido(s)) return s;
+            System.out.println("Telefono invalido. Solo digitos, espacios y opcionalmente '+' inicial. Entre 6 y 20 caracteres.");
+        }
     }
 
     private String leerTextoConDefecto(String campo, String actual) {
