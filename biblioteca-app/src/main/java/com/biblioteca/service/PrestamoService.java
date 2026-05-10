@@ -6,8 +6,11 @@ import com.biblioteca.dao.PrestamoDAO;
 import com.biblioteca.model.Amigo;
 import com.biblioteca.model.Libro;
 import com.biblioteca.model.Prestamo;
+import com.biblioteca.util.ConexionBD;
 import com.biblioteca.util.ResultadoOperacion;
 
+import java.sql.Connection;
+import java.sql.SQLException;
 import java.time.LocalDate;
 
 public class PrestamoService {
@@ -34,13 +37,32 @@ public class PrestamoService {
             return ResultadoOperacion.error("La fecha prevista de devolucion no puede estar en el pasado.");
         }
 
-        Prestamo p = new Prestamo(idLibro, idAmigo, LocalDate.now(), fechaPrevista, null, notas);
-        if (!prestamoDAO.insertar(p)) {
-            return ResultadoOperacion.error("Error al registrar el prestamo en la base de datos.");
-        }
+        Connection con = null;
+        try {
+            con = ConexionBD.conectar();
+            con.setAutoCommit(false);
 
-        libroDAO.cambiarDisponibilidad(idLibro, false);
-        return ResultadoOperacion.exito("Prestamo registrado con ID " + p.getIdPrestamo() + ".");
+            Prestamo p = new Prestamo(idLibro, idAmigo, LocalDate.now(), fechaPrevista, null, notas);
+
+            if (!prestamoDAO.insertar(p, con)) {
+                con.rollback();
+                return ResultadoOperacion.error("Error al registrar el prestamo en la base de datos.");
+            }
+
+            if (!libroDAO.cambiarDisponibilidad(idLibro, false, con)) {
+                con.rollback();
+                return ResultadoOperacion.error("Error al actualizar la disponibilidad del libro. Cambios revertidos.");
+            }
+
+            con.commit();
+            return ResultadoOperacion.exito("Prestamo registrado con ID " + p.getIdPrestamo() + ".");
+
+        } catch (SQLException e) {
+            try { if (con != null) con.rollback(); } catch (SQLException ignored) {}
+            return ResultadoOperacion.error("Error en la transaccion: " + e.getMessage());
+        } finally {
+            try { if (con != null) { con.setAutoCommit(true); con.close(); } } catch (SQLException ignored) {}
+        }
     }
 
     public ResultadoOperacion devolverLibro(int idPrestamo) {
@@ -52,11 +74,29 @@ public class PrestamoService {
             return ResultadoOperacion.error("Ese prestamo ya estaba devuelto.");
         }
 
-        if (!prestamoDAO.registrarDevolucion(idPrestamo, LocalDate.now())) {
-            return ResultadoOperacion.error("Error al registrar la devolucion.");
-        }
+        Connection con = null;
+        try {
+            con = ConexionBD.conectar();
+            con.setAutoCommit(false);
 
-        libroDAO.cambiarDisponibilidad(p.getIdLibro(), true);
-        return ResultadoOperacion.exito("Devolucion registrada correctamente.");
+            if (!prestamoDAO.registrarDevolucion(idPrestamo, LocalDate.now(), con)) {
+                con.rollback();
+                return ResultadoOperacion.error("Error al registrar la devolucion.");
+            }
+
+            if (!libroDAO.cambiarDisponibilidad(p.getIdLibro(), true, con)) {
+                con.rollback();
+                return ResultadoOperacion.error("Error al actualizar la disponibilidad del libro. Cambios revertidos.");
+            }
+
+            con.commit();
+            return ResultadoOperacion.exito("Devolucion registrada correctamente.");
+
+        } catch (SQLException e) {
+            try { if (con != null) con.rollback(); } catch (SQLException ignored) {}
+            return ResultadoOperacion.error("Error en la transaccion: " + e.getMessage());
+        } finally {
+            try { if (con != null) { con.setAutoCommit(true); con.close(); } } catch (SQLException ignored) {}
+        }
     }
 }

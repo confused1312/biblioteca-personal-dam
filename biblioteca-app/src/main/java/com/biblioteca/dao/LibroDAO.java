@@ -7,8 +7,9 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LibroDAO {
+public class LibroDAO implements Dao<Libro> {
 
+    @Override
     public boolean insertar(Libro libro) {
         String sql = "INSERT INTO libro (titulo, isbn, anio_publicacion, num_paginas, editorial, id_autor, id_categoria, disponible) " +
                      "VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
@@ -39,6 +40,7 @@ public class LibroDAO {
         }
     }
 
+    @Override
     public Libro buscarPorId(int id) {
         String sql = "SELECT * FROM libro WHERE id_libro = ?";
         try (Connection con = ConexionBD.conectar();
@@ -53,6 +55,7 @@ public class LibroDAO {
         return null;
     }
 
+    @Override
     public List<Libro> listarTodos() {
         List<Libro> lista = new ArrayList<>();
         String sql = "SELECT * FROM libro ORDER BY titulo";
@@ -96,6 +99,7 @@ public class LibroDAO {
         return lista;
     }
 
+    @Override
     public boolean actualizar(Libro libro) {
         String sql = "UPDATE libro SET titulo=?, isbn=?, anio_publicacion=?, num_paginas=?, editorial=?, " +
                      "id_autor=?, id_categoria=?, disponible=? WHERE id_libro=?";
@@ -121,6 +125,7 @@ public class LibroDAO {
         }
     }
 
+    @Override
     public boolean eliminar(int id) {
         String sql = "DELETE FROM libro WHERE id_libro = ?";
         try (Connection con = ConexionBD.conectar();
@@ -134,14 +139,18 @@ public class LibroDAO {
         }
     }
 
-    public boolean cambiarDisponibilidad(int idLibro, boolean disponible) {
+    public boolean cambiarDisponibilidad(int idLibro, boolean disponible, Connection con) throws SQLException {
         String sql = "UPDATE libro SET disponible = ? WHERE id_libro = ?";
-        try (Connection con = ConexionBD.conectar();
-             PreparedStatement ps = con.prepareStatement(sql)) {
-
+        try (PreparedStatement ps = con.prepareStatement(sql)) {
             ps.setBoolean(1, disponible);
             ps.setInt(2, idLibro);
             return ps.executeUpdate() > 0;
+        }
+    }
+
+    public boolean cambiarDisponibilidad(int idLibro, boolean disponible) {
+        try (Connection con = ConexionBD.conectar()) {
+            return cambiarDisponibilidad(idLibro, disponible, con);
         } catch (SQLException e) {
             System.err.println("Error al cambiar disponibilidad: " + e.getMessage());
             return false;
